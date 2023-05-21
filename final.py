@@ -15,10 +15,17 @@ submission_data = pd.read_csv('submission2022.csv')
 submission_data['Date'] = pd.to_datetime(submission_data['Date'], format='%d-%b-%y')
 
 # Set the app title
-st.title('Student Submission Predictor')
+st.title('2022 Student Submission Predictor')
+
+# Add a description
+st.markdown('''
+This app predicts the number of student submissions based on a given date of a non-profit organization.
+The current limitation is that you have to input date within 11-Oct-2021 to 01-Sep-22. The accuracy is still underdevelopment.
+This app is just a demonstration of deploying a model in Streamlit.
+''')
 
 # Input field for future date
-input_date = st.text_input('Enter a future date in %d-%b-%Y format', '01-Jan-2024')
+input_date = st.text_input('Enter a future date in DD-MMM-YYYY format', '01-Jan-2022')
 
 # Parse the input date
 try:
