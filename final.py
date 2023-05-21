@@ -8,7 +8,7 @@ from tensorflow.keras.preprocessing.sequence import TimeseriesGenerator
 model = load_model('gru_model.hdf5')
 
 # Load the submission data
-submission_data = pd.read_csv('submission2022.csv')
+submission_data = pd.read_csv('submission2023.csv')
 
 # Convert the 'Date' column to datetime
 submission_data['Date'] = pd.to_datetime(submission_data['Date'], format='%d-%b-%y')
@@ -17,7 +17,7 @@ submission_data['Date'] = pd.to_datetime(submission_data['Date'], format='%d-%b-
 st.title('Student Submission Predictor')
 
 # Input field for future date
-input_date = st.text_input('Enter a future date in DD-MMM-YYYY format', '01-Jan-2024')
+input_date = st.text_input('Enter a future date in %d-%b-%Y format', '01-Jan-2024')
 
 # Parse the input date
 try:
@@ -34,14 +34,18 @@ time_series_data = pd.Series(submission_data['Submission'].values, index=submiss
 data_generator = TimeseriesGenerator(time_series_data.values, time_series_data.values, length=5, batch_size=1)
 
 # Find the sequence that corresponds to the input date
-target_index = time_series_data.index.get_loc(input_date_str)
-input_sequence = data_generator[target_index]
+try:
+    target_index = time_series_data.index.get_loc(input_date_str)
+    input_sequence = data_generator[target_index]
+    
+    # Reshape the input sequence for compatibility with the model
+    input_features = input_sequence.reshape((input_sequence.shape[0], input_sequence.shape[1], 1))
+    
+    # Predict the submission number
+    prediction = model.predict(input_features)[0][0]
+    
+    # Display the prediction
+    st.success(f'Predicted submission number for {input_date_str}: {prediction:.2f}')
 
-# Reshape the input sequence for compatibility with the model
-input_features = input_sequence.reshape((input_sequence.shape[0], input_sequence.shape[1], 1))
-
-# Predict the submission number
-prediction = model.predict(input_features)[0][0]
-
-# Display the prediction
-st.success(f'Predicted submission number for {input_date_str}: {prediction:.2f}')
+except KeyError:
+    st.error(f'No data available for the input date: {input_date_str}. Please try a different date.')
