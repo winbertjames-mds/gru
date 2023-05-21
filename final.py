@@ -8,7 +8,7 @@ from tensorflow.keras.preprocessing.sequence import TimeseriesGenerator
 model = load_model('gru_model.hdf5')
 
 # Load the submission data
-submission_data = pd.read_csv('submission2023.csv')
+submission_data = pd.read_csv('submission2022.csv')
 
 # Convert the 'Date' column to datetime
 submission_data['Date'] = pd.to_datetime(submission_data['Date'], format='%d-%b-%y')
