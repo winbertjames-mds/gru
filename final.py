@@ -16,8 +16,8 @@ submission_data['Date'] = pd.to_datetime(submission_data['Date'], format='%d-%b-
 # Set the app title
 st.title('Student Submission Predictor')
 
-# Input field for date
-input_date = st.text_input('Enter a specific date in DD-MMM-YYYY format', '01-Jan-2023')
+# Input field for future date
+input_date = st.text_input('Enter a future date in DD-MMM-YYYY format', '01-Jan-2024')
 
 # Parse the input date
 try:
@@ -27,26 +27,21 @@ except ValueError:
     st.error('Invalid date format. Please enter a date in %d-%b-%Y format.')
     st.stop()
 
-# Filter submissions for the given date
-filtered_data = submission_data[submission_data['Date'] == input_date_str]
+# Convert the submission data to a time series dataset
+time_series_data = pd.Series(submission_data['Submission'].values, index=submission_data['Date'])
 
-if len(filtered_data) > 0:
-    # Get the features for the input date
-    input_features = filtered_data.drop(['Date', 'Submission'], axis=1).values
-    
-    # Reshape the input features for compatibility with the model
-    input_features = input_features.reshape((input_features.shape[0], input_features.shape[1], 1))
+# Generate sequences using TimeseriesGenerator for the entire dataset
+data_generator = TimeseriesGenerator(time_series_data.values, time_series_data.values, length=5, batch_size=1)
 
-    # Create a dummy target variable for TimeseriesGenerator
-    target_dummy = [0] * len(input_features)
+# Find the sequence that corresponds to the input date
+target_index = time_series_data.index.get_loc(input_date_str)
+input_sequence = data_generator[target_index]
 
-    # Generate sequences using TimeseriesGenerator
-    data_generator = TimeseriesGenerator(input_features, target_dummy, length=5, batch_size=1)
+# Reshape the input sequence for compatibility with the model
+input_features = input_sequence.reshape((input_sequence.shape[0], input_sequence.shape[1], 1))
 
-    # Predict the submission number
-    prediction = model.predict(data_generator)[0][0]
+# Predict the submission number
+prediction = model.predict(input_features)[0][0]
 
-    # Display the prediction
-    st.success(f'Predicted submission number for {input_date_str}: {prediction:.2f}')
-else:
-    st.info('No submissions found for the given date.')
+# Display the prediction
+st.success(f'Predicted submission number for {input_date_str}: {prediction:.2f}')
