@@ -37,7 +37,7 @@ data_generator = TimeseriesGenerator(time_series_data.values, time_series_data.v
 # Find the sequence that corresponds to the input date
 try:
     target_index = time_series_data.index.get_loc(input_date_str)
-    input_sequence = data_generator[target_index]
+    input_sequence, _ = data_generator[target_index]  # Extract only the input features
     
     # Convert the tuple to a NumPy array
     input_array = np.array(input_sequence)
