@@ -59,4 +59,4 @@ try:
     st.success(f'Predicted submission number for {input_date_str}: {prediction:.2f}')
 
 except KeyError:
-    st.error(f'No data available for the input date: {input_date_str}. Please try a different date.')
+    st.error(f'The input date: {input_date_str} has not been trained yet. Under development. Please try a different date.')
