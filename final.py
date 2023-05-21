@@ -3,12 +3,13 @@ import pandas as pd
 from datetime import datetime
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import TimeseriesGenerator
+import numpy as np
 
 # Load the GRU model
 model = load_model('gru_model.hdf5')
 
 # Load the submission data
-submission_data = pd.read_csv('submission2022.csv')
+submission_data = pd.read_csv('submission2023.csv')
 
 # Convert the 'Date' column to datetime
 submission_data['Date'] = pd.to_datetime(submission_data['Date'], format='%d-%b-%y')
@@ -38,8 +39,11 @@ try:
     target_index = time_series_data.index.get_loc(input_date_str)
     input_sequence = data_generator[target_index]
     
+    # Convert the tuple to a NumPy array
+    input_array = np.array(input_sequence)
+    
     # Reshape the input sequence for compatibility with the model
-    input_features = input_sequence.reshape((input_sequence.shape[0], input_sequence.shape[1], 1))
+    input_features = input_array.reshape((input_array.shape[0], input_array.shape[1], 1))
     
     # Predict the submission number
     prediction = model.predict(input_features)[0][0]
