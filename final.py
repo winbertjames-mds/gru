@@ -20,12 +20,12 @@ st.title('Student Submission Predictor using GRU')
 # Add a description
 st.markdown('''
 This app predicts the number of student submissions based on a given date of a non-profit organization.
-The current limitation is that you have to input date within 11-Oct-2021 to 01-Sep-22. The accuracy is still underdevelopment.
+The current limitation is that you have to input date within 11-Oct-2021 to 30-Jul-22. The accuracy is still underdevelopment.
 This app is just a demonstration of deploying a model in Streamlit.
 ''')
 
 # Input field for future date
-input_date = st.text_input('Enter a future date in DD-MMM-YYYY format', '01-Jan-2022')
+input_date = st.text_input('Enter a date in DD-MMM-YYYY format', '01-Jan-2022')
 
 # Parse the input date
 try:
