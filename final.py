@@ -15,7 +15,7 @@ submission_data = pd.read_csv('submission2022.csv')
 submission_data['Date'] = pd.to_datetime(submission_data['Date'], format='%d-%b-%y')
 
 # Set the app title
-st.title('2022 Student Submission Predictor')
+st.title('Student Submission Predictor using GRU')
 
 # Add a description
 st.markdown('''
