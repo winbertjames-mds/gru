@@ -7,10 +7,10 @@ from tensorflow.keras.models import load_model
 model = load_model('gru_model.hdf5')
 
 # Load the submission data
-submission_data = pd.read_csv('submission2022.csv')
+submission_data = pd.read_csv('submission2023.csv')
 
 # Convert the 'Date' column to datetime
-submission_data['Date'] = pd.to_datetime(submission_data['Date'], format='%d-%b-%Y')
+submission_data['Date'] = pd.to_datetime(submission_data['Date'], format='%d-%b-%y')
 
 # Set the app title
 st.title('Student Submission Predictor')
